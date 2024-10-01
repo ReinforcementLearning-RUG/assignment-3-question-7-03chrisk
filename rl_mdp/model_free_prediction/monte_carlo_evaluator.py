@@ -59,12 +59,11 @@ class MCEvaluator(AbstractEvaluator):
         """
 
         G = 0
-        visited = {}
+        states = [state for state, _, _ in episode]
         for time_step in reversed(range(len(episode))):
             state, action, reward = episode[time_step]
             G = self.env.discount_factor * G + reward
-            if state not in visited:
+            if state not in states[:time_step]:
                 self.returns[state].append(G)
                 self.value_fun[state] = np.mean(self.returns[state])
-                visited[state] = True
         
